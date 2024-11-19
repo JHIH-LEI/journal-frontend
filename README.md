@@ -34,13 +34,13 @@ pnpm install
 To generate GraphQL types for use in your codebase, run:
 
 ```bash
-npm run codegen
+pnpm run codegen
 ```
 
 ## Run the Development Server
 
-```
-npm run dev
+```bash
+pnpm run dev
 ```
 
 ## Tailwind CSS Commands
