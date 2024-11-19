@@ -1,50 +1,65 @@
-# React + TypeScript + Vite
+# Project Setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project uses GraphQL for data fetching and Tailwind CSS for styling. Follow the steps below to set up and run the project.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Make sure you have the following installed:
 
-## Expanding the ESLint configuration
+- Node.js (version 18 or higher)
+- pnpm
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone the repository:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+git clone git@github.com:JHIH-LEI/journal-frontend.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Navigate to the project directory:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd <project-directory>
 ```
+
+3. install dependencies:
+
+```bash
+pnpm install
+```
+
+## Generate GraphQL Types
+
+To generate GraphQL types for use in your codebase, run:
+
+```bash
+npm run codegen
+```
+
+## Run the Development Server
+
+```
+npm run dev
+```
+
+## Tailwind CSS Commands
+
+The project uses Tailwind CSS for styling. You can compile the CSS or enable watch mode using the following commands:
+
+Compile CSS Once
+To generate the output.css file:
+
+```bash
+pnpm run build:css
+```
+
+Enable Watch Mode
+To automatically recompile CSS when you make changes:
+
+```bash
+pnpm run watch:css
+```
+
+Tailwind CSS Configuration
+Tailwind is configured via tailwind.config.js and processes styles from the input file located at src/input.css. The compiled CSS is output to src/output.css.
