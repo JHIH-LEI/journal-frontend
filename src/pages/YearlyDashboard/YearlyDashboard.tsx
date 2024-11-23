@@ -10,292 +10,95 @@ import { PieChartIcon, Zap } from "lucide-react";
 import { useState } from "react";
 import MonthlyMoodRadarChart from "../../components/chart/MonthlyMoodRadarChart";
 import { Link } from "react-router-dom";
-import { MoodName } from "@/gql/graphql";
+import {
+  GetYearlyDashbardDataQuery,
+  GetYearlyDashbardDataQueryVariables,
+  MonthlyMoodData,
+  MoodName,
+} from "@/gql/graphql";
 import MoodLineChart from "@/components/chart/MoodLineChart";
-const summaryData = {
-  totalEvents: 365,
-  totalJournals: 280,
-  tagJournalCount: [
-    {
-      id: 1,
-      tagName: "red flag",
-      count: 21,
-      color: "#e78b8bFF",
-    },
-    {
-      id: 2,
-      tagName: "english exchange",
-      count: 3,
-      color: "#4fea7b",
-    },
-    {
-      id: 3,
-      tagName: "tech meetup",
-      count: 3,
-      color: "#58a0ff",
-    },
-    {
-      id: 2,
-      tagName: "sport",
-      count: 3,
-      color: "#d54fea",
-    },
-    {
-      id: 2,
-      tagName: "self-care",
-      count: 3,
-      color: "#ff8630",
-    },
-  ],
-  journalMoodDistribution: [
-    {
-      month: "1",
-      [MoodName["Happy"]]: 220,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Love"]]: 6,
-      [MoodName["Neutral"]]: 0,
-      [MoodName["Anxiety"]]: 21,
-      [MoodName["Sadness"]]: 33,
-    },
-    {
-      month: "2",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "3",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "4",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "5",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "6",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "7",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "8",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "9",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "10",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "11",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-    {
-      month: "12",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 12,
-      [MoodName["Sadness"]]: 5,
-    },
-  ],
+import { useQuery } from "@apollo/client";
+import { gql } from "@/gql";
 
-  eventMoodDistribution: [
-    {
-      month: "1",
-      [MoodName["Happy"]]: 20,
-      [MoodName["Anger"]]: 12,
-      [MoodName["Love"]]: 6,
-      [MoodName["Neutral"]]: 0,
-      [MoodName["Anxiety"]]: 1,
-      [MoodName["Sadness"]]: 33,
-    },
-    {
-      month: "2",
-      [MoodName["Happy"]]: 30,
-      [MoodName["Anger"]]: 10,
-      [MoodName["Neutral"]]: 5,
-      [MoodName["Anxiety"]]: 2,
-      [MoodName["Love"]]: 15,
-      [MoodName["Sadness"]]: 8,
-    },
-    {
-      month: "3",
-      [MoodName["Happy"]]: 40,
-      [MoodName["Anger"]]: 5,
-      [MoodName["Neutral"]]: 10,
-      [MoodName["Anxiety"]]: 3,
-      [MoodName["Love"]]: 20,
-      [MoodName["Sadness"]]: 7,
-    },
-    {
-      month: "4",
-      [MoodName["Happy"]]: 35,
-      [MoodName["Anger"]]: 8,
-      [MoodName["Neutral"]]: 12,
-      [MoodName["Anxiety"]]: 4,
-      [MoodName["Love"]]: 18,
-      [MoodName["Sadness"]]: 6,
-    },
-    {
-      month: "5",
-      [MoodName["Happy"]]: 45,
-      [MoodName["Anger"]]: 6,
-      [MoodName["Neutral"]]: 15,
-      [MoodName["Anxiety"]]: 5,
-      [MoodName["Love"]]: 22,
-      [MoodName["Sadness"]]: 4,
-    },
-    {
-      month: "6",
-      [MoodName["Happy"]]: 50,
-      [MoodName["Anger"]]: 7,
-      [MoodName["Neutral"]]: 10,
-      [MoodName["Anxiety"]]: 6,
-      [MoodName["Love"]]: 25,
-      [MoodName["Sadness"]]: 3,
-    },
-    {
-      month: "7",
-      [MoodName["Happy"]]: 55,
-      [MoodName["Anger"]]: 4,
-      [MoodName["Neutral"]]: 8,
-      [MoodName["Anxiety"]]: 7,
-      [MoodName["Love"]]: 30,
-      [MoodName["Sadness"]]: 2,
-    },
-    {
-      month: "8",
-      [MoodName["Happy"]]: 60,
-      [MoodName["Anger"]]: 3,
-      [MoodName["Neutral"]]: 5,
-      [MoodName["Anxiety"]]: 8,
-      [MoodName["Love"]]: 35,
-      [MoodName["Sadness"]]: 1,
-    },
-    {
-      month: "9",
-      [MoodName["Happy"]]: 65,
-      [MoodName["Anger"]]: 2,
-      [MoodName["Neutral"]]: 4,
-      [MoodName["Anxiety"]]: 9,
-      [MoodName["Love"]]: 40,
-      [MoodName["Sadness"]]: 0,
-    },
-    {
-      month: "10",
-      [MoodName["Happy"]]: 70,
-      [MoodName["Anger"]]: 1,
-      [MoodName["Neutral"]]: 3,
-      [MoodName["Anxiety"]]: 10,
-      [MoodName["Love"]]: 45,
-      [MoodName["Sadness"]]: 0,
-    },
-    {
-      month: "11",
-      [MoodName["Happy"]]: 75,
-      [MoodName["Anger"]]: 0,
-      [MoodName["Neutral"]]: 2,
-      [MoodName["Anxiety"]]: 11,
-      [MoodName["Love"]]: 50,
-      [MoodName["Sadness"]]: 0,
-    },
-    {
-      month: "12",
-      [MoodName["Happy"]]: 80,
-      [MoodName["Anger"]]: 0,
-      [MoodName["Neutral"]]: 1,
-      [MoodName["Anxiety"]]: 12,
-      [MoodName["Love"]]: 55,
-      [MoodName["Sadness"]]: 0,
-    },
-  ],
-  monthlyData: Array.from({ length: 12 }, (_, i) => ({
-    month: `${i + 1}`,
-    moods: [
-      {
-        id: 1,
-        mood: MoodName["Happy"],
-        countInJournal: Math.trunc(Math.random() * 50),
-        countInEvent: Math.trunc(Math.random() * 50),
-      },
-      {
-        id: 2,
-        mood: MoodName["Anger"],
-        countInJournal: Math.trunc(Math.random() * 30),
-        countInEvent: Math.trunc(Math.random() * 30),
-      },
-      {
-        id: 3,
-        mood: MoodName["Sadness"],
-        countInJournal: Math.trunc(Math.random() * 20),
-        countInEvent: Math.trunc(Math.random() * 20),
-      },
-      //   { id: 4, mood: "neutral", count: Math.trunc(Math.random() * 40) },
-    ],
-  })),
-};
+function transformToJournalMoodDistribution(
+  data: MonthlyMoodData[]
+): Array<{ x: string } & Record<MoodName, number>> {
+  const result = data.map((d) => {
+    const moods = d.moods.reduce((acc, cur) => {
+      acc[cur.moodName] = cur.journalCount;
+      return acc;
+    }, {} as Record<MoodName, number>);
+
+    return {
+      x: `${d.month}`,
+      ...moods,
+    };
+  });
+  return result;
+}
+
+function transformToEventMoodDistribution(
+  data: MonthlyMoodData[]
+): Array<{ x: string } & Record<MoodName, number>> {
+  const result = data.map((d) => {
+    const moods = d.moods.reduce((acc, cur) => {
+      acc[cur.moodName] = cur.eventCount;
+      return acc;
+    }, {} as Record<MoodName, number>);
+
+    return {
+      x: `${d.month}`,
+      ...moods,
+    };
+  });
+  return result;
+}
+
+const GET_DASHBOARD = gql(`
+query GetYearlyDashbardData($year: String!) {
+    getYearlySummaryData(year: $year) {
+    code
+    message
+    data {
+      counter {
+        totalEventCount
+        totalJournalCount
+      }
+      monthlyMoodData {
+        month
+        moods {
+          moodId
+          moodName
+          eventCount
+          journalCount
+        }
+      }
+      activityJournalCounts {
+        activityId
+        activityName
+        activityColor
+        journalCount
+      }
+    }
+    success
+  }
+}
+`);
 
 const YearlyDashboard = () => {
   const [selectedYear, setSelectedYear] = useState(format(new Date(), "yyyy"));
+  const { data, loading, error } = useQuery<
+    GetYearlyDashbardDataQuery,
+    GetYearlyDashbardDataQueryVariables
+  >(GET_DASHBOARD, {
+    variables: {
+      year: selectedYear,
+    },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+  const summaryData = data?.getYearlySummaryData?.data;
   const headerChartCardDynamicContentH = "md:h-[25vh] lg:h-[40vh]";
   return (
     <div className="max-w-7xl mx-auto p-4 space-y-6">
@@ -309,7 +112,7 @@ const YearlyDashboard = () => {
           <SelectContent></SelectContent>
         </Select>
       </div>
-      {/* 年度總結 */}
+      {/* yearly data */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row justify-between items-center space-y-0">
@@ -317,7 +120,7 @@ const YearlyDashboard = () => {
             <Zap className="w-4 h-4 text-yellow-500" />
           </CardHeader>
           <CardContent className="text-2xl font-bold">
-            {summaryData.totalJournals}
+            {summaryData?.counter?.totalJournalCount}
           </CardContent>
         </Card>
         <Card>
@@ -326,24 +129,25 @@ const YearlyDashboard = () => {
             <Zap className="w-4 h-4 text-yellow-500" />
           </CardHeader>
           <CardContent className="text-2xl font-bold">
-            {summaryData.totalEvents}
+            {summaryData?.counter?.totalEventCount}
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row justify-between items-center space-y-0">
-            <CardTitle>Tag's Jorunals</CardTitle>
+            <CardTitle>{`${selectedYear} Activity Counts`}</CardTitle>
             <Zap className="w-4 h-4 text-yellow-500" />
           </CardHeader>
           <CardContent className="text-sm font-bold">
             <ul className="flex flex-wrap gap-2">
-              {summaryData.tagJournalCount.map((tagData) => (
+              {summaryData?.activityJournalCounts?.map((activity) => (
                 <li
-                  className="px-4 py-2 border rounded-full"
-                  style={{ background: tagData.color }}
+                  key={activity.activityId}
+                  className="px-4 py-2 border rounded-full bg-opacity-50"
+                  style={{ background: activity.activityColor || "#ffffff" }}
                 >
                   <Link to="/">
-                    <span>{`#${tagData.tagName}`}:</span>
-                    <span>{tagData.count}</span>
+                    <span>{`#${activity.activityName || "others"}`}:</span>
+                    <span>&nbsp;{activity.journalCount}</span>
                   </Link>
                 </li>
               ))}
@@ -359,10 +163,9 @@ const YearlyDashboard = () => {
             className={`h-48 ${headerChartCardDynamicContentH} text-2xl font-bold"`}
           >
             <MoodLineChart
-              data={summaryData.eventMoodDistribution.map((d) => ({
-                x: d.month,
-                ...d,
-              }))}
+              data={transformToJournalMoodDistribution(
+                summaryData?.monthlyMoodData || []
+              )}
             />
           </CardContent>
         </Card>
@@ -375,19 +178,18 @@ const YearlyDashboard = () => {
             className={`h-48 ${headerChartCardDynamicContentH} text-2xl font-bold"`}
           >
             <MoodLineChart
-              data={summaryData.journalMoodDistribution.map((d) => ({
-                x: d.month,
-                ...d,
-              }))}
+              data={transformToEventMoodDistribution(
+                summaryData?.monthlyMoodData || []
+              )}
             />
           </CardContent>
         </Card>
       </div>
-      {/* 月心情總結 */}
+      {/* monthly mood */}
       <h2 className="text-xl font-bold">Monthly Mood Tracking</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {summaryData.monthlyData.map((data) => (
-          <MonthlyMoodRadarChart data={data} />
+        {summaryData?.monthlyMoodData?.map((data) => (
+          <MonthlyMoodRadarChart key={data.month} data={data} />
         ))}
       </div>
     </div>

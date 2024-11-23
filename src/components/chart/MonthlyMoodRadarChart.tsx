@@ -19,29 +19,30 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-
+// TODO: month轉成月字串
 const MonthlyMoodRadarChart = ({
   data,
 }: {
   data: {
-    month: string;
+    month: number;
     moods: Array<{
-      id: number;
-      mood: MoodName;
-      countInJournal: number;
-      countInEvent: number;
+      moodId: number;
+      moodName: MoodName;
+      journalCount: number;
+      eventCount: number;
     }>;
   };
 }) => {
   const sortedMoodData = [...data.moods].sort(
-    (a, b) =>
-      b.countInJournal + b.countInEvent - (a.countInJournal + a.countInEvent)
+    (a, b) => b.journalCount + b.eventCount - (a.journalCount + a.eventCount)
   );
-
   return (
     <Card
       className={`${
-        MoodMapping[sortedMoodData[0].mood].backgroundColor200
+        sortedMoodData[0].journalCount === 0 &&
+        sortedMoodData[0].eventCount === 0
+          ? ""
+          : MoodMapping[sortedMoodData[0].moodName].backgroundColor200
       } bg-opacity-40`}
     >
       <CardHeader>
@@ -52,18 +53,18 @@ const MonthlyMoodRadarChart = ({
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data.moods}>
               <PolarGrid />
-              <PolarAngleAxis dataKey="mood" />
+              <PolarAngleAxis dataKey="moodName" />
               <PolarRadiusAxis />
               <Radar
                 name={`Journal`}
-                dataKey="countInJournal"
+                dataKey="journalCount"
                 stroke="#82ca9d"
                 fill="#82ca9d"
                 fillOpacity={0.6}
               />
               <Radar
                 name={`Event`}
-                dataKey="countInEvent"
+                dataKey="eventCount"
                 stroke="#8884d8"
                 fill="#8884d8"
                 fillOpacity={0.6}
@@ -83,10 +84,12 @@ const MonthlyMoodRadarChart = ({
             </TableHeader>
             <TableBody>
               {sortedMoodData.map((moodData) => (
-                <TableRow>
-                  <TableCell className="font-medium">{moodData.mood}</TableCell>
-                  <TableCell>{moodData.countInJournal}</TableCell>
-                  <TableCell>{moodData.countInEvent}</TableCell>
+                <TableRow key={moodData.moodId}>
+                  <TableCell className="font-medium">
+                    {moodData.moodName}
+                  </TableCell>
+                  <TableCell>{moodData.journalCount}</TableCell>
+                  <TableCell>{moodData.eventCount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

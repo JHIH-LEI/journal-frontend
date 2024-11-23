@@ -670,6 +670,10 @@ body {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-10 {
   height: 2.5rem;
 }
@@ -1101,6 +1105,10 @@ body {
   --tw-bg-opacity: 0.3;
 }
 
+.bg-opacity-50 {
+  --tw-bg-opacity: 0.5;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -1219,6 +1227,11 @@ body {
 
 .text-xl {
   font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
   line-height: 1.75rem;
 }
 
@@ -1506,6 +1519,11 @@ body {
 @media (min-width: 640px) {
   .sm\:h-\[10vh\] {
     height: 10vh;
+  }
+
+  .sm\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 }
 

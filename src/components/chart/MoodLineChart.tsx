@@ -20,15 +20,20 @@ const MoodLineChart = ({ data }: { data: dataItem[] }) => {
   return (
     <ResponsiveContainer>
       <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 0 }}>
-        <XAxis dataKey="month" />
+        <XAxis dataKey="x" />
         <YAxis />
         <Legend
           verticalAlign="bottom"
           align="center"
-          formatter={(value) => <span className="text-sm">{value}</span>}
+          wrapperStyle={{
+            fontWeight: "700",
+            fontSize: "0.875rem",
+            lineHeight: "1.25rem",
+          }}
         />
         {MoodKeyList.map((moodName) => (
           <Line
+            key={moodName}
             type="monotone"
             dataKey={moodName}
             fillOpacity={0.5}
