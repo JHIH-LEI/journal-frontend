@@ -1,3 +1,8 @@
+# Demo
+
+Journal Edit Page:<br>
+[https://youtube.com/shorts/NC5PM8VmI50?feature=share](https://youtube.com/shorts/NC5PM8VmI50?feature=share)
+
 # Project Setup
 
 This project uses GraphQL for data fetching and Tailwind CSS for styling. Follow the steps below to set up and run the project.
